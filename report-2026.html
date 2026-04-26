@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玥酱 · 1—4月工作总结</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --primary: #5B6AD0;
+  --primary-light: #7B8AE0;
+  --primary-dark: #4A59C0;
+  --success: #52C41A;
+  --accent: #F5A623;
+  --text-dark: #1a1a2e;
+  --text-mid: #3d3d6b;
+  --text-light: #7080b0;
+  --card-bg: rgba(255,255,255,0.82);
+  --card-border: rgba(91,106,208,0.12);
+  --shadow: 0 8px 32px rgba(91,106,208,0.13);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;
+  background: #eaedf8;
+}
+
+/* ── Slide system ── */
+#slides-wrapper {
+  width: 100%; height: 100vh;
+  position: relative; overflow: hidden;
+}
+
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 64px 80px 96px;
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity .5s cubic-bezier(.4,0,.2,1), transform .5s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+  background: linear-gradient(135deg, #e8ecf8 0%, #edeaf8 55%, #f0e8f8 100%);
+}
+.slide.active { opacity:1; transform:translateX(0); pointer-events:all; }
+.slide.exit-left { opacity:0; transform:translateX(-60px); }
+.slide.go-right { transform: translateX(60px); }
+.slide.go-left { transform: translateX(-60px); }
+
+/* Orbs */
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(72px); pointer-events: none; z-index: 0;
+}
+.orb-a { width:520px; height:520px; background:rgba(91,106,208,.17); top:-120px; right:-100px; }
+.orb-b { width:380px; height:380px; background:rgba(180,100,240,.12); bottom:-100px; left:-80px; }
+.orb-c { width:300px; height:300px; background:rgba(82,196,26,.07); top:38%; left:28%; }
+
+/* ── Bottom nav ── */
+#bottom-nav {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.78); backdrop-filter: blur(18px);
+  border-radius: 40px; padding: 9px 22px;
+  box-shadow: 0 4px 24px rgba(91,106,208,.16);
+  border: 1px solid rgba(91,106,208,.12);
+  z-index: 1000;
+}
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(91,106,208,.25); cursor: pointer;
+  transition: all .35s ease;
+}
+.nav-dot.active { width: 26px; border-radius: 4px; background: var(--primary); }
+.nav-dot:hover:not(.active) { background: rgba(91,106,208,.5); transform: scale(1.2); }
+.nav-arrow {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: transparent; border: 1.5px solid rgba(91,106,208,.3);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--primary); font-size: 12px; transition: all .2s;
+  font-family: inherit;
+}
+.nav-arrow:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ── Common types ── */
+.en-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--primary); background: rgba(91,106,208,.1); border-radius: 20px;
+  padding: 4px 14px; display: inline-block; margin-bottom: 16px;
+}
+.page-title {
+  font-size: clamp(30px,3.8vw,50px); font-weight: 800;
+  color: var(--text-dark); line-height: 1.15; margin-bottom: 8px;
+}
+.page-num {
+  position: absolute; top: 28px; right: 80px;
+  font-size: 11px; font-weight: 600; color: rgba(91,106,208,.4);
+  letter-spacing: .1em;
+}
+
+/* ════════════════════════════════
+   PAGE 1 · COVER
+   ════════════════════════════════ */
+#slide-1 { text-align: center; }
+
+.cover-badge {
+  font-size: 11px; font-weight: 700; letter-spacing: .22em;
+  color: var(--primary); background: rgba(91,106,208,.1);
+  border: 1px solid rgba(91,106,208,.2); border-radius: 30px;
+  padding: 6px 20px; display: inline-block; margin-bottom: 28px;
+}
+.cover-name {
+  font-size: clamp(68px, 8.5vw, 108px); font-weight: 900;
+  background: linear-gradient(135deg, #3a4bb5 0%, #7b6cd0 50%, #c06bb0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1; margin-bottom: 18px;
+  letter-spacing: -.02em; position: relative; z-index: 1;
+}
+.cover-sub {
+  font-size: clamp(18px, 2.5vw, 28px); color: var(--text-mid);
+  font-weight: 400; letter-spacing: .1em; margin-bottom: 44px;
+  position: relative; z-index: 1;
+}
+.cover-meta {
+  display: flex; align-items: center; gap: 20px;
+  justify-content: center; position: relative; z-index: 1;
+}
+.cover-meta-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text-light);
+}
+.cover-meta-dot { width:5px; height:5px; border-radius:50%; background:var(--primary); opacity:.35; }
+
+/* ════════════════════════════════
+   PAGE 2 · SITUATION
+   ════════════════════════════════ */
+.sit-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+  width: 100%; max-width: 960px; position: relative; z-index: 1;
+}
+.sit-card {
+  background: var(--card-bg); border-radius: 22px;
+  border: 1px solid var(--card-border); box-shadow: var(--shadow);
+  padding: 36px; backdrop-filter: blur(14px);
+}
+.sit-icon {
+  width: 50px; height: 50px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 20px;
+}
+.sit-icon.blue { background: rgba(91,106,208,.1); }
+.sit-icon.purple { background: rgba(180,100,240,.1); }
+.sit-title { font-size: 17px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px; }
+.sit-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.sit-list li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13.5px; color: var(--text-mid); line-height: 1.6;
+}
+.sit-list li::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--primary); margin-top: 7px; flex-shrink: 0; opacity: .55;
+}
+.sit-insight {
+  background: linear-gradient(135deg, rgba(91,106,208,.07), rgba(180,100,240,.07));
+  border-radius: 12px; padding: 14px 18px; margin-top: 18px;
+  border-left: 3px solid var(--primary);
+}
+.sit-insight p { font-size: 13px; color: var(--primary-dark); font-weight: 600; line-height: 1.65; }
+
+/* ════════════════════════════════
+   PAGE 3 · TASK
+   ════════════════════════════════ */
+#slide-3 { text-align: center; }
+.task-main {
+  font-size: clamp(20px, 3vw, 38px); font-weight: 800; color: var(--text-dark);
+  line-height: 1.5; max-width: 780px; margin: 0 auto 48px;
+  position: relative; z-index: 1;
+}
+.task-hl {
+  background: linear-gradient(135deg, var(--primary), #9b6cd0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.task-tags {
+  display: flex; gap: 20px; justify-content: center;
+  position: relative; z-index: 1;
+}
+.task-tag {
+  padding: 14px 40px; border-radius: 50px;
+  font-size: 16px; font-weight: 700;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+.task-tag.green { background: rgba(82,196,26,.1); color: #389e0d; border: 1.5px solid rgba(82,196,26,.25); }
+.task-tag.orange { background: rgba(245,166,35,.1); color: #d48806; border: 1.5px solid rgba(245,166,35,.25); }
+
+/* ════════════════════════════════
+   PAGE 4 · TIMELINE
+   ════════════════════════════════ */
+#slide-4 { justify-content: flex-start; align-items: flex-start; padding-top: 72px; }
+
+.tl-wrap {
+  width: 100%; max-width: 1100px;
+  position: relative; z-index: 1;
+}
+
+.tl-track {
+  display: flex; align-items: flex-start;
+  position: relative; padding: 0 32px;
+}
+.tl-track::before {
+  content: ''; position: absolute; top: 24px; left: 72px; right: 72px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), rgba(180,100,240,.6));
+  z-index: 0;
+}
+
+.tl-month {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; cursor: pointer; position: relative; z-index: 1;
+}
+.tl-node {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: white; border: 3px solid var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 13px; color: var(--primary);
+  box-shadow: 0 4px 16px rgba(91,106,208,.2);
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  position: relative; z-index: 2;
+}
+.tl-month:hover .tl-node, .tl-month.active .tl-node {
+  background: var(--primary); color: white;
+  transform: scale(1.18);
+  box-shadow: 0 8px 28px rgba(91,106,208,.4);
+}
+.tl-mlabel {
+  margin-top: 10px; font-size: 12px; font-weight: 700;
+  color: var(--text-light); transition: color .3s;
+}
+.tl-month.active .tl-mlabel { color: var(--primary); }
+.tl-badge {
+  margin-top: 5px; font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 8px;
+  background: rgba(91,106,208,.08); color: var(--primary);
+  letter-spacing: .03em;
+}
+
+.tl-detail-wrap { margin-top: 28px; width: 100%; position: relative; min-height: 180px; }
+
+.tl-detail {
+  position: absolute; top: 0; width: 100%;
+  background: var(--card-bg); border-radius: 20px;
+  border: 1px solid var(--card-border); box-shadow: var(--shadow);
+  padding: 28px 32px; backdrop-filter: blur(14px);
+  opacity: 0; transform: translateY(14px);
+  transition: all .4s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+.tl-detail.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+.tl-d-tag { font-size: 11px; font-weight: 700; color: var(--primary); letter-spacing: .12em; margin-bottom: 6px; }
+.tl-d-title { font-size: 18px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px; }
+.tl-chips { display: flex; gap: 12px; flex-wrap: wrap; }
+.tl-chip {
+  background: rgba(91,106,208,.07); border: 1px solid rgba(91,106,208,.14);
+  border-radius: 10px; padding: 8px 16px;
+  font-size: 13px; color: var(--text-mid); font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+}
+.tl-chip-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--primary); opacity: .5; }
+
+/* May special style */
+.tl-month:last-child .tl-node {
+  border-color: rgba(91,106,208,.4); border-style: dashed;
+  background: rgba(255,255,255,.6);
+}
+.tl-month:last-child:hover .tl-node {
+  background: rgba(91,106,208,.15); color: var(--primary);
+  transform: scale(1.1);
+}
+
+/* ════════════════════════════════
+   PAGE 5 · OUTPUT
+   ════════════════════════════════ */
+#slide-5 { justify-content: flex-start; align-items: flex-start; padding-top: 72px; }
+
+.out-wrap { width: 100%; max-width: 1100px; position: relative; z-index: 1; }
+
+.big-stats {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 22px;
+  margin-bottom: 22px;
+}
+.stat-card {
+  background: var(--card-bg); border-radius: 20px;
+  border: 1px solid var(--card-border); box-shadow: var(--shadow);
+  padding: 30px 24px 26px; backdrop-filter: blur(14px);
+  text-align: center; position: relative; overflow: hidden;
+}
+.stat-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; border-radius: 0 0 20px 20px;
+}
+.stat-card.blue::after { background: linear-gradient(90deg, var(--primary), var(--primary-light)); }
+.stat-card.green::after { background: linear-gradient(90deg, var(--success), #73d13d); }
+.stat-card.orange::after { background: linear-gradient(90deg, var(--accent), #ffc53d); }
+
+.stat-num {
+  font-size: clamp(36px,4.5vw,58px); font-weight: 900;
+  line-height: 1; margin-bottom: 10px;
+}
+.stat-card.blue .stat-num { color: var(--primary); }
+.stat-card.green .stat-num { color: #389e0d; }
+.stat-card.orange .stat-num { color: #d48806; }
+
+.stat-desc { font-size: 14px; color: var(--text-mid); font-weight: 700; margin-bottom: 8px; line-height: 1.5; }
+.stat-note { font-size: 11px; color: var(--text-light); line-height: 1.45; }
+
+.prog-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.prog-card {
+  background: var(--card-bg); border-radius: 16px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 20px rgba(91,106,208,.08);
+  padding: 22px 24px; backdrop-filter: blur(12px);
+}
+.prog-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.prog-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.prog-dot.done { background: var(--success); box-shadow: 0 0 8px rgba(82,196,26,.5); }
+.prog-dot.wip { background: var(--accent); box-shadow: 0 0 8px rgba(245,166,35,.5); animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+.prog-title { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+.prog-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.prog-chip {
+  font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 500;
+}
+.prog-chip.done { background:rgba(82,196,26,.09); color:#389e0d; border:1px solid rgba(82,196,26,.22); }
+.prog-chip.wip { background:rgba(245,166,35,.09); color:#d48806; border:1px solid rgba(245,166,35,.22); }
+
+/* ════════════════════════════════
+   PAGE 6 · INSIGHT
+   ════════════════════════════════ */
+#slide-6 { justify-content: flex-start; align-items: flex-start; padding-top: 72px; }
+
+.ins-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 24px;
+  width: 100%; max-width: 1100px; margin-bottom: 28px;
+  position: relative; z-index: 1;
+}
+.ins-card {
+  background: var(--card-bg); border-radius: 22px;
+  border: 1px solid var(--card-border); box-shadow: var(--shadow);
+  padding: 36px 28px; backdrop-filter: blur(14px);
+  transition: transform .3s, box-shadow .3s;
+}
+.ins-card:hover { transform: translateY(-5px); box-shadow: 0 18px 52px rgba(91,106,208,.18); }
+.ins-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin-bottom: 20px;
+}
+.ins-icon.i1 { background: rgba(91,106,208,.1); }
+.ins-icon.i2 { background: rgba(245,166,35,.1); }
+.ins-icon.i3 { background: rgba(240,100,140,.1); }
+.ins-card-title { font-size: 18px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; }
+.ins-card-sub { font-size: 12px; font-weight: 600; letter-spacing: .08em; color: var(--text-light); margin-bottom: 14px; }
+.ins-card-desc { font-size: 13px; color: var(--text-mid); line-height: 1.75; }
+
+.ins-footer {
+  width: 100%; max-width: 1100px; text-align: center;
+  position: relative; z-index: 1;
+}
+.ins-footer-text {
+  font-size: 13.5px; color: var(--text-light); font-style: italic;
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.ins-footer-text::before,.ins-footer-text::after {
+  content: ''; width: 48px; height: 1px; background: rgba(91,106,208,.22);
+}
+
+/* ════════════════════════════════
+   PAGE 7 · PLAN
+   ════════════════════════════════ */
+#slide-7 { justify-content: flex-start; align-items: flex-start; padding-top: 72px; }
+
+.plan-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  width: 100%; max-width: 1000px; position: relative; z-index: 1;
+}
+.plan-card {
+  background: var(--card-bg); border-radius: 24px;
+  border: 1px solid var(--card-border); box-shadow: var(--shadow);
+  padding: 40px; backdrop-filter: blur(14px);
+  position: relative; overflow: hidden;
+}
+.plan-card::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 150px; height: 150px; border-radius: 50%; opacity: .06;
+}
+.plan-card.lft::before { background: var(--primary); }
+.plan-card.rgt::before { background: #c06bb0; }
+.plan-badge {
+  font-size: 11px; font-weight: 700; letter-spacing: .16em;
+  padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 20px;
+}
+.plan-card.lft .plan-badge { background: rgba(91,106,208,.1); color: var(--primary); }
+.plan-card.rgt .plan-badge { background: rgba(180,100,240,.1); color: #8b4fc0; }
+.plan-title { font-size: 26px; font-weight: 900; color: var(--text-dark); margin-bottom: 6px; }
+.plan-sub { font-size: 13px; color: var(--text-light); margin-bottom: 28px; }
+.plan-items { display: flex; flex-direction: column; gap: 14px; }
+.plan-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px; border-radius: 12px;
+}
+.plan-card.lft .plan-item { background: rgba(91,106,208,.05); border: 1px solid rgba(91,106,208,.1); }
+.plan-card.rgt .plan-item { background: rgba(180,100,240,.05); border: 1px solid rgba(180,100,240,.1); }
+.plan-ico { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.plan-txt { font-size: 13.5px; color: var(--text-mid); line-height: 1.55; font-weight: 500; }
+
+/* ── Slide 2/4/5/6/7 header ── */
+.slide-header {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 1100px; margin-bottom: 36px;
+}
+</style>
+</head>
+<body>
+
+<div id="slides-wrapper">
+
+  <!-- ══ SLIDE 1: COVER ══ -->
+  <div class="slide active" id="slide-1">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+    <div class="page-num">01 / 07</div>
+    <div class="cover-badge">2026 · 工作汇报</div>
+    <div class="cover-name">玥酱</div>
+    <div class="cover-sub">1 — 4 月工作总结</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <span>📅</span><span>2026年1月 — 4月</span>
+      </div>
+      <div class="cover-meta-dot"></div>
+      <div class="cover-meta-item">
+        <span>🏢</span><span>太平洋工作台</span>
+      </div>
+      <div class="cover-meta-dot"></div>
+      <div class="cover-meta-item">
+        <span>🤖</span><span>AI 能力落地</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2: SITUATION ══ -->
+  <div class="slide" id="slide-2">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="page-num">02 / 07</div>
+    <div class="slide-header">
+      <div class="en-tag">SITUATION</div>
+      <div class="page-title">背景与挑战</div>
+    </div>
+    <div class="sit-grid">
+      <div class="sit-card">
+        <div class="sit-icon blue">🔄</div>
+        <div class="sit-title">转岗背景</div>
+        <ul class="sit-list">
+          <li>1月从资管方向转入太平洋工作台</li>
+          <li>系统庞杂，工作台功能模块众多</li>
+          <li>推广历史遇阻，AI 能力渗透率低</li>
+          <li>业务 OP 对 AI 信任度不足，落地难</li>
+        </ul>
+        <div class="sit-insight">
+          <p>📌 从0开始拎包调研，摸清系统底盘与推广卡点</p>
+        </div>
+      </div>
+      <div class="sit-card">
+        <div class="sit-icon purple">💡</div>
+        <div class="sit-title">我的判断</div>
+        <ul class="sit-list">
+          <li>在太平洋，<strong>上线 ≠ 结束</strong></li>
+          <li>功能建设只是第一步，扩覆盖才是真正价值</li>
+          <li>旧模型"by业务配置"成本高，是扩覆盖的核心瓶颈</li>
+          <li>需要构建通用能力，降低接入门槛</li>
+        </ul>
+        <div class="sit-insight">
+          <p>🎯 用通用 Skill 替代定制化方案，让一次建设多业务复用</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: TASK ══ -->
+  <div class="slide" id="slide-3">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+    <div class="page-num">03 / 07</div>
+    <div class="en-tag" style="position:relative;z-index:1">TASK · 目标</div>
+    <div class="task-main">
+      <span class="task-hl">AI 替代低价值操作</span>，<br>释放坐席聚焦<br>「沟通 · 判断 · 共情」
+    </div>
+    <div class="task-tags">
+      <div class="task-tag green">
+        <span>⚡</span> 人效提升
+      </div>
+      <div class="task-tag orange">
+        <span>✨</span> 体验提升
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4: TIMELINE ══ -->
+  <div class="slide" id="slide-4">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="page-num">04 / 07</div>
+    <div class="slide-header">
+      <div class="en-tag">TIMELINE</div>
+      <div class="page-title">工作时间轴 <span style="font-size:14px;font-weight:500;color:var(--text-light);margin-left:12px">↑ 点击月份查看详情</span></div>
+    </div>
+    <div class="tl-wrap">
+      <div class="tl-track">
+        <div class="tl-month active" data-month="0" onclick="selectMonth(0)">
+          <div class="tl-node">1月</div>
+          <div class="tl-mlabel">January</div>
+          <div class="tl-badge">交接</div>
+        </div>
+        <div class="tl-month" data-month="1" onclick="selectMonth(1)">
+          <div class="tl-node">2月</div>
+          <div class="tl-mlabel">February</div>
+          <div class="tl-badge">规划</div>
+        </div>
+        <div class="tl-month" data-month="2" onclick="selectMonth(2)">
+          <div class="tl-node">3月</div>
+          <div class="tl-mlabel">March</div>
+          <div class="tl-badge">验通路</div>
+        </div>
+        <div class="tl-month" data-month="3" onclick="selectMonth(3)">
+          <div class="tl-node">4月</div>
+          <div class="tl-mlabel">April</div>
+          <div class="tl-badge">规划·迭代</div>
+        </div>
+        <div class="tl-month" data-month="4" onclick="selectMonth(4)">
+          <div class="tl-node">5月</div>
+          <div class="tl-mlabel">May</div>
+          <div class="tl-badge">扩覆盖</div>
+        </div>
+      </div>
+
+      <div class="tl-detail-wrap">
+        <div class="tl-detail visible" id="tl-0">
+          <div class="tl-d-tag">JANUARY · 交接期</div>
+          <div class="tl-d-title">打好基础，快速建立认知</div>
+          <div class="tl-chips">
+            <div class="tl-chip"><span class="tl-chip-dot"></span>资管境内工作交接</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>资管境外工作交接</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>工作台拎包调研</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>摸清系统底盘与推广卡点</div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tl-1">
+          <div class="tl-d-tag">FEBRUARY · 规划期</div>
+          <div class="tl-d-title">定方向，出方案</div>
+          <div class="tl-chips">
+            <div class="tl-chip"><span class="tl-chip-dot"></span>业务 OP 深度沟通</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>工作台 AI 规划定稿</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>预填评测方案设计</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>通用 Skill 方案论证</div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tl-2">
+          <div class="tl-d-tag">MARCH · 验通路</div>
+          <div class="tl-d-title">跑通关键路径，完成首批试点</div>
+          <div class="tl-chips">
+            <div class="tl-chip"><span class="tl-chip-dot"></span>Claw × 工作台通路验证</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>骑手业务试点</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>星巴克业务试点</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>采纳率数据采集分析</div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tl-3">
+          <div class="tl-d-tag">APRIL · 规划·迭代</div>
+          <div class="tl-d-title">深化规划，推进能力迭代</div>
+          <div class="tl-chips">
+            <div class="tl-chip"><span class="tl-chip-dot"></span>客服助手规划定稿</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>服务收尾能力迭代</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>扩覆盖方案设计</div>
+            <div class="tl-chip"><span class="tl-chip-dot"></span>配置成本优化验证</div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tl-4">
+          <div class="tl-d-tag">MAY · 扩覆盖 <span style="color:#F5A623;margin-left:6px">进行中</span></div>
+          <div class="tl-d-title">规模化落地，助手试点启动</div>
+          <div class="tl-chips">
+            <div class="tl-chip" style="border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.07)">
+              <span style="width:5px;height:5px;border-radius:50%;background:#F5A623;opacity:.7;flex-shrink:0"></span>服务收尾扩覆盖（到家/医药）
+            </div>
+            <div class="tl-chip" style="border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.07)">
+              <span style="width:5px;height:5px;border-radius:50%;background:#F5A623;opacity:.7;flex-shrink:0"></span>主动推荐式客服助手试点
+            </div>
+            <div class="tl-chip" style="border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.07)">
+              <span style="width:5px;height:5px;border-radius:50%;background:#F5A623;opacity:.7;flex-shrink:0"></span>规划中 🚧
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5: OUTPUT ══ -->
+  <div class="slide" id="slide-5">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="page-num">05 / 07</div>
+    <div class="slide-header">
+      <div class="en-tag">OUTPUT</div>
+      <div class="page-title">核心产出</div>
+    </div>
+    <div class="out-wrap">
+      <div class="big-stats">
+        <div class="stat-card green">
+          <div class="stat-num" data-target="95" data-suffix="%+">0%+</div>
+          <div class="stat-desc">工单预填采纳率</div>
+          <div class="stat-note">与老模型持平<br>覆盖字段数量翻倍</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-num" data-target="70" data-prefix="-" data-suffix="%">0%</div>
+          <div class="stat-desc">配置成本大幅降低</div>
+          <div class="stat-note">无需 by 业务配置<br>Agent / 数据源 / 出入参</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-num" data-target="43" data-suffix="个">0个</div>
+          <div class="stat-desc">预填字段覆盖数</div>
+          <div class="stat-note">老模型：20个<br>新通用 Skill：43个</div>
+        </div>
+      </div>
+      <div class="prog-cards">
+        <div class="prog-card">
+          <div class="prog-head">
+            <div class="prog-dot done"></div>
+            <div class="prog-title">已完成</div>
+          </div>
+          <div class="prog-chips">
+            <div class="prog-chip done">工作台AI规划</div>
+            <div class="prog-chip done">骑手业务试点</div>
+            <div class="prog-chip done">星巴克试点</div>
+            <div class="prog-chip done">客服助手规划</div>
+            <div class="prog-chip done">通路验证</div>
+          </div>
+        </div>
+        <div class="prog-card">
+          <div class="prog-head">
+            <div class="prog-dot wip"></div>
+            <div class="prog-title">进行中</div>
+          </div>
+          <div class="prog-chips">
+            <div class="prog-chip wip">5月到家扩覆盖</div>
+            <div class="prog-chip wip">5月医药扩覆盖</div>
+            <div class="prog-chip wip">客服助手试点</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 6: INSIGHT ══ -->
+  <div class="slide" id="slide-6">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="page-num">06 / 07</div>
+    <div class="slide-header">
+      <div class="en-tag">INSIGHT</div>
+      <div class="page-title">认知迭代</div>
+      <div style="font-size:15px;color:var(--text-light);margin-top:4px">「人无法被替代的三件事」</div>
+    </div>
+    <div class="ins-grid">
+      <div class="ins-card">
+        <div class="ins-icon i1">🧭</div>
+        <div class="ins-card-title">决策判断</div>
+        <div class="ins-card-sub">DIRECTION · RHYTHM · TRADE-OFF</div>
+        <div class="ins-card-desc">
+          AI 无法判断现在该做什么、什么时候推、什么时候等。<br><br>
+          方向选择、推进节奏、资源取舍——这是产品经理的核心价值，也是无法被模型替代的。
+        </div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon i2">📐</div>
+        <div class="ins-card-title">制定标准</div>
+        <div class="ins-card-sub">AGENT DESIGN · MODEL CRITERIA</div>
+        <div class="ins-card-desc">
+          通用 Skill 的设计标准从哪来？模型效果好坏怎么评判？<br><br>
+          Agent 设计框架、模型评判准则——这些标准本身需要人来定义，AI 只能执行。
+        </div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon i3">❤️</div>
+        <div class="ins-card-title">人心洞察</div>
+        <div class="ins-card-sub">TRUST · EMPATHY · ROOT CAUSE</div>
+        <div class="ins-card-desc">
+          坐席不信任 AI，根因是「出了问题自己担责」。<br><br>
+          理解这个根因，才能设计出真正让坐席愿意用的产品，而不是形式上的AI接入。
+        </div>
+      </div>
+    </div>
+    <div class="ins-footer">
+      <span class="ins-footer-text">AI 是我手里的工具，而非替代我的威胁</span>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 7: PLAN ══ -->
+  <div class="slide" id="slide-7">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="page-num">07 / 07</div>
+    <div class="slide-header">
+      <div class="en-tag">PLAN</div>
+      <div class="page-title">下一步</div>
+    </div>
+    <div class="plan-grid">
+      <div class="plan-card lft">
+        <div class="plan-badge">5月 · 扩覆盖</div>
+        <div class="plan-title">规模化落地</div>
+        <div class="plan-sub">服务收尾能力推广</div>
+        <div class="plan-items">
+          <div class="plan-item">
+            <div class="plan-ico">🏠</div>
+            <div class="plan-txt">到家业务接入<br><span style="font-size:12px;color:var(--text-light)">服务收尾 · 新业务扩覆盖</span></div>
+          </div>
+          <div class="plan-item">
+            <div class="plan-ico">💊</div>
+            <div class="plan-txt">医药业务接入<br><span style="font-size:12px;color:var(--text-light)">服务收尾 · 新业务扩覆盖</span></div>
+          </div>
+          <div class="plan-item">
+            <div class="plan-ico">📊</div>
+            <div class="plan-txt">覆盖率目标<br><span style="font-size:12px;color:var(--text-light)">跟进采纳率数据，持续优化</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="plan-card rgt">
+        <div class="plan-badge">5月 · 助手试点</div>
+        <div class="plan-title">助手新场景</div>
+        <div class="plan-sub">主动推荐式客服助手</div>
+        <div class="plan-items">
+          <div class="plan-item">
+            <div class="plan-ico">💬</div>
+            <div class="plan-txt">医药客服灵动面板<br><span style="font-size:12px;color:var(--text-light)">主动推荐式助手 · 首次试点</span></div>
+          </div>
+          <div class="plan-item">
+            <div class="plan-ico">🔬</div>
+            <div class="plan-txt">效果评测方案<br><span style="font-size:12px;color:var(--text-light)">建立助手类能力的评测标准</span></div>
+          </div>
+          <div class="plan-item">
+            <div class="plan-ico">🚀</div>
+            <div class="plan-txt">规划扩展路径<br><span style="font-size:12px;color:var(--text-light)">基于试点结论，规划更多业务</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav">
+  <button class="nav-arrow" id="btn-prev" onclick="navigate(-1)">&#8249;</button>
+  <div class="nav-dot active" onclick="goTo(0)"></div>
+  <div class="nav-dot" onclick="goTo(1)"></div>
+  <div class="nav-dot" onclick="goTo(2)"></div>
+  <div class="nav-dot" onclick="goTo(3)"></div>
+  <div class="nav-dot" onclick="goTo(4)"></div>
+  <div class="nav-dot" onclick="goTo(5)"></div>
+  <div class="nav-dot" onclick="goTo(6)"></div>
+  <button class="nav-arrow" id="btn-next" onclick="navigate(1)">&#8250;</button>
+</nav>
+
+<script>
+/* ────────────────────────────────
+   Slide system
+────────────────────────────────── */
+let current = 0;
+const total = 7;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dots = Array.from(document.querySelectorAll('.nav-dot'));
+let animating = false;
+
+function goTo(idx) {
+  if (animating || idx === current) return;
+  animating = true;
+
+  const dir = idx > current ? 1 : -1;
+  const oldSlide = slides[current];
+  const newSlide = slides[idx];
+
+  // Setup new slide starting position
+  newSlide.style.transition = 'none';
+  newSlide.classList.remove('exit-left');
+  newSlide.style.opacity = '0';
+  newSlide.style.transform = `translateX(${dir * 60}px)`;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      // Animate old slide out
+      oldSlide.style.transition = '';
+      oldSlide.style.opacity = '0';
+      oldSlide.style.transform = `translateX(${-dir * 60}px)`;
+      oldSlide.classList.remove('active');
+
+      // Animate new slide in
+      newSlide.style.transition = '';
+      newSlide.style.opacity = '1';
+      newSlide.style.transform = 'translateX(0)';
+      newSlide.classList.add('active');
+
+      // Update dots
+      dots[current].classList.remove('active');
+      dots[idx].classList.add('active');
+
+      current = idx;
+
+      setTimeout(() => {
+        // Reset old slide
+        oldSlide.style.opacity = '';
+        oldSlide.style.transform = '';
+        animating = false;
+
+        // Trigger countUp if output page
+        if (current === 4) triggerCountUp();
+      }, 550);
+    });
+  });
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < total) goTo(next);
+}
+
+// Keyboard navigation — single listener
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { const n = current + 1; if (n < total) goTo(n); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { const n = current - 1; if (n >= 0) goTo(n); }
+});
+
+/* ────────────────────────────────
+   Timeline interaction
+────────────────────────────────── */
+let activeMonth = 0;
+
+function selectMonth(idx) {
+  // Deactivate current
+  const months = document.querySelectorAll('.tl-month');
+  const details = document.querySelectorAll('.tl-detail');
+
+  months[activeMonth].classList.remove('active');
+  details[activeMonth].classList.remove('visible');
+
+  activeMonth = idx;
+  months[idx].classList.add('active');
+  details[idx].classList.add('visible');
+}
+
+/* ────────────────────────────────
+   CountUp animation
+────────────────────────────────── */
+let countUpDone = false;
+
+function triggerCountUp() {
+  if (countUpDone) return;
+  countUpDone = true;
+
+  const nums = document.querySelectorAll('.stat-num[data-target]');
+  nums.forEach(el => {
+    const target = parseInt(el.dataset.target, 10);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    const duration = 1400;
+    const start = performance.now();
+
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = Math.round(eased * target);
+      el.textContent = prefix + val + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+
+// Hook goTo: reset countUpDone when leaving slide 5, trigger when entering
+const _origGoTo = goTo;
+function goTo(idx) {
+  if (current === 4 && idx !== 4) countUpDone = false;
+  _origGoTo(idx);
+}
+</script>
+</body>
+</html>
