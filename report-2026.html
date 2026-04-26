@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李玥 · 2026年1-4月工作总结</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #5B6AD0;
+  --success: #52C41A;
+  --accent: #F5A623;
+  --danger: #FF4D4F;
+  --bg-start: #eef0f8;
+  --bg-end: #f5eef8;
+  --text-dark: #1a1a2e;
+  --text-mid: #4a4a6a;
+  --text-light: #8888aa;
+  --card-bg: rgba(255,255,255,0.72);
+  --card-border: rgba(91,106,208,0.12);
+  --radius: 16px;
+  --shadow: 0 4px 24px rgba(91,106,208,0.10);
+}
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+}
+#deck { width: 100%; height: 100%; position: relative; overflow: hidden; }
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 36px 60px 88px;
+  opacity: 0; transform: translateX(100%);
+  transition: transform 0.55s cubic-bezier(0.77,0,0.18,1), opacity 0.55s ease;
+  pointer-events: none; will-change: transform, opacity;
+}
+.slide.active { opacity: 1; transform: translateX(0); pointer-events: all; z-index: 2; }
+.slide.exit-left { opacity: 0; transform: translateX(-100%); z-index: 1; }
+
+/* Nav */
+#nav {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.75); backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border); border-radius: 50px;
+  padding: 7px 18px; z-index: 100;
+  box-shadow: 0 4px 20px rgba(91,106,208,0.12);
+}
+.nav-arrow {
+  width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary); border-radius: 50%; transition: background 0.2s; font-size: 15px;
+}
+.nav-arrow:hover { background: rgba(91,106,208,0.10); }
+.nav-dots { display: flex; gap: 8px; align-items: center; }
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(91,106,208,0.22); cursor: pointer; transition: all 0.3s;
+}
+.dot.active { background: var(--primary); width: 22px; border-radius: 4px; }
+
+/* Shared layout */
+.slide-inner { width: 100%; max-width: 1200px; }
+.page-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--primary); background: rgba(91,106,208,0.10);
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; display: inline-block;
+}
+.page-title { font-size: 32px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; line-height: 1.25; }
+.page-sub { font-size: 14px; color: var(--text-light); margin-bottom: 26px; }
+.card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); box-shadow: var(--shadow); backdrop-filter: blur(8px); padding: 22px 26px;
+}
+
+/* ── PAGE 1: COVER ── */
+#slide-0 {
+  background:
+    radial-gradient(ellipse 60% 50% at 28% 38%, rgba(91,106,208,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 78% 65%, rgba(175,100,220,0.12) 0%, transparent 65%),
+    linear-gradient(135deg, #eef0f8 0%, #f5eef8 100%);
+}
+.cover-inner { display: flex; flex-direction: column; align-items: flex-start; width: 100%; max-width: 1200px; }
+.cover-tag {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.2em;
+  color: var(--primary); background: rgba(91,106,208,0.10);
+  padding: 5px 14px; border-radius: 20px; margin-bottom: 22px;
+}
+.cover-name {
+  font-size: 100px; font-weight: 800; line-height: 1;
+  letter-spacing: -3px; margin-bottom: 14px;
+  background: linear-gradient(135deg, var(--primary) 0%, #9b6ee0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.cover-period { font-size: 30px; font-weight: 500; color: var(--text-mid); margin-bottom: 32px; }
+.cover-divider {
+  width: 72px; height: 4px;
+  background: linear-gradient(90deg, var(--primary), #9b6ee0);
+  border-radius: 2px; margin-bottom: 24px;
+}
+.cover-desc { font-size: 15px; color: var(--text-light); line-height: 2; }
+
+/* ── PAGE 2: TIMELINE ── */
+#slide-1 { align-items: flex-start; }
+.timeline-track {
+  display: flex; align-items: flex-start; position: relative;
+  margin-top: 4px; padding-bottom: 4px;
+}
+.timeline-line {
+  position: absolute; top: 21px; left: 44px; right: 44px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary) 75%, rgba(91,106,208,0.2) 100%);
+  border-radius: 2px; z-index: 0;
+}
+.tl-node {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  position: relative; z-index: 1; cursor: pointer;
+}
+.tl-dot {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: white; border: 3px solid var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--primary);
+  transition: all 0.3s; box-shadow: 0 2px 12px rgba(91,106,208,0.2);
+}
+.tl-dot:hover, .tl-dot.active { background: var(--primary); color: white; transform: scale(1.15); }
+.tl-node.plan .tl-dot {
+  border-style: dashed; border-color: rgba(91,106,208,0.45);
+  color: rgba(91,106,208,0.5); background: rgba(255,255,255,0.6);
+}
+.tl-node.plan .tl-dot:hover, .tl-node.plan .tl-dot.active {
+  background: rgba(91,106,208,0.12); color: var(--primary); transform: scale(1.15);
+}
+.tl-mlabel { margin-top: 9px; font-size: 13px; font-weight: 600; color: var(--text-mid); }
+.tl-plabel { font-size: 11px; color: var(--text-light); margin-top: 3px; }
+.tl-node.plan .tl-mlabel { color: rgba(91,106,208,0.45); }
+.tl-node.plan .tl-plabel { color: rgba(91,106,208,0.35); }
+
+.tl-details { margin-top: 18px; width: 100%; }
+.tl-detail { display: none; animation: fadeUp 0.32s ease; }
+.tl-detail.open { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tl-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 18px 24px; display: flex; gap: 20px; align-items: flex-start;
+}
+.tl-card.plan { border-style: dashed; }
+.tl-big-month { font-size: 44px; font-weight: 800; color: var(--primary); opacity: 0.18; line-height: 1; min-width: 52px; }
+.tl-card.plan .tl-big-month { color: rgba(91,106,208,0.4); }
+.tl-body { flex: 1; }
+.tl-item {
+  display: flex; align-items: flex-start; gap: 9px;
+  font-size: 13.5px; color: var(--text-mid); line-height: 1.55; margin-bottom: 7px;
+}
+.tl-item:last-of-type { margin-bottom: 0; }
+.tl-blt {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--primary);
+  margin-top: 7px; flex-shrink: 0;
+}
+.tl-card.plan .tl-blt { background: rgba(91,106,208,0.3); }
+.tl-outcome {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 11px; padding-top: 11px;
+  border-top: 1px solid rgba(91,106,208,0.10);
+  font-size: 13px; color: var(--primary); font-weight: 600;
+}
+.tl-outcome::before { content: '→'; font-size: 15px; }
+.plan-badge {
+  display: inline-block; background: rgba(91,106,208,0.08);
+  border: 1px dashed rgba(91,106,208,0.3); color: rgba(91,106,208,0.65);
+  border-radius: 4px; font-size: 11px; padding: 1px 8px; margin-left: 6px;
+}
+
+/* ── PAGE 3: DIRECTION ── */
+#slide-2 { align-items: flex-start; }
+.strategy-banner {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(91,106,208,0.08) 0%, rgba(155,110,224,0.08) 100%);
+  border: 1px solid rgba(91,106,208,0.15); border-radius: var(--radius);
+  padding: 24px 32px; margin-bottom: 24px;
+}
+.strategy-quote { font-size: 24px; font-weight: 700; color: var(--text-dark); line-height: 1.4; margin-bottom: 12px; }
+.strategy-quote em { color: var(--primary); font-style: normal; }
+.strategy-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+.s-tag {
+  background: rgba(91,106,208,0.12); color: var(--primary);
+  border-radius: 20px; padding: 4px 14px; font-size: 13px; font-weight: 600;
+}
+.dir-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: 100%; }
+.dir-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px 24px; }
+.dir-card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.15em; color: var(--text-light); text-transform: uppercase; margin-bottom: 10px; }
+.dir-card-title { font-size: 17px; font-weight: 700; color: var(--text-dark); margin-bottom: 14px; }
+.dir-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 11px; }
+.dir-row:last-child { margin-bottom: 0; }
+.dir-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+}
+.dir-icon.human { background: rgba(82,196,26,0.12); }
+.dir-icon.ai { background: rgba(91,106,208,0.12); }
+.dir-text { font-size: 13.5px; color: var(--text-mid); line-height: 1.55; }
+.dir-text strong { color: var(--text-dark); display: block; margin-bottom: 3px; }
+
+/* ── PAGE 4: EXECUTION ── */
+#slide-3 { align-items: flex-start; }
+.metrics-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; width: 100%; margin-bottom: 20px; }
+.metric-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 24px 22px; display: flex; flex-direction: column; gap: 5px;
+  position: relative; overflow: hidden;
+}
+.metric-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 4px; border-radius: var(--radius) var(--radius) 0 0;
+}
+.metric-card.green::before { background: var(--success); }
+.metric-card.blue::before { background: var(--primary); }
+.metric-card.orange::before { background: var(--accent); }
+.metric-num { font-size: 54px; font-weight: 800; line-height: 1; letter-spacing: -2px; }
+.metric-card.green .metric-num { color: var(--success); }
+.metric-card.blue .metric-num { color: var(--primary); }
+.metric-card.orange .metric-num { color: var(--accent); }
+.metric-unit { font-size: 18px; font-weight: 600; margin-left: 1px; }
+.metric-label { font-size: 14px; font-weight: 600; color: var(--text-dark); margin-top: 4px; }
+.metric-sub { font-size: 12px; color: var(--text-light); line-height: 1.5; }
+.status-rows { width: 100%; display: flex; flex-direction: column; gap: 9px; }
+.status-row {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 10px; padding: 11px 18px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.status-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+.status-badge.done { background: rgba(82,196,26,0.12); color: var(--success); }
+.status-badge.next { background: rgba(91,106,208,0.10); color: var(--primary); }
+.status-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.status-tag { font-size: 12.5px; color: var(--text-mid); background: rgba(0,0,0,0.04); border-radius: 4px; padding: 2px 8px; }
+
+/* ── PAGE 5: ASSISTANT ── */
+#slide-4 { align-items: flex-start; }
+.asst-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: 100%; margin-bottom: 18px; }
+.asst-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px 24px;
+}
+.asst-card.done { border-left: 4px solid var(--success); }
+.asst-card.pilot { border-left: 4px solid var(--primary); border-top-style: dashed; border-right-style: dashed; border-bottom-style: dashed; }
+.asst-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
+.asst-card.done .asst-badge { background: rgba(82,196,26,0.12); color: var(--success); }
+.asst-card.pilot .asst-badge { background: rgba(91,106,208,0.10); color: var(--primary); }
+.asst-title { font-size: 17px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+.asst-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13.5px; color: var(--text-mid); margin-bottom: 8px; line-height: 1.55; }
+.asst-item:last-child { margin-bottom: 0; }
+.asst-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+.done .asst-dot { background: var(--success); }
+.pilot .asst-dot { background: var(--primary); }
+.asst-footer {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(91,106,208,0.08), rgba(155,110,224,0.06));
+  border: 1px solid rgba(91,106,208,0.12); border-radius: 10px;
+  padding: 16px 24px; font-size: 15px; font-weight: 600;
+  color: var(--primary); text-align: center; line-height: 1.6;
+}
+
+/* ── PAGE 6: ITERATION ── */
+#slide-5 { align-items: flex-start; }
+.iter-header { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 28px; align-self: flex-start; }
+.iter-num { font-size: 82px; font-weight: 800; line-height: 1; color: var(--primary); letter-spacing: -3px; }
+.iter-unit-block { display: flex; flex-direction: column; margin-bottom: 12px; gap: 4px; }
+.iter-unit { font-size: 22px; font-weight: 600; color: var(--text-dark); }
+.iter-sub-tags { display: flex; gap: 8px; }
+.iter-sub-tag { font-size: 12px; color: var(--text-light); background: rgba(0,0,0,0.05); border-radius: 4px; padding: 2px 8px; }
+.iter-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; width: 100%; }
+.iter-col {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 20px;
+}
+.iter-col-title { font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.iter-col-icon { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+.iter-col:nth-child(1) .iter-col-icon { background: rgba(255,77,79,0.10); }
+.iter-col:nth-child(2) .iter-col-icon { background: rgba(82,196,26,0.10); }
+.iter-col:nth-child(3) .iter-col-icon { background: rgba(91,106,208,0.10); }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+.iter-tag { font-size: 13px; padding: 5px 12px; border-radius: 6px; font-weight: 500; }
+.iter-col:nth-child(1) .iter-tag { background: rgba(255,77,79,0.07); color: #c83232; }
+.iter-col:nth-child(2) .iter-tag { background: rgba(82,196,26,0.08); color: #35880e; }
+.iter-col:nth-child(3) .iter-tag { background: rgba(91,106,208,0.08); color: var(--primary); }
+
+/* ── PAGE 7: INSIGHT ── */
+#slide-6 { align-items: flex-start; }
+.insight-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; width: 100%; margin-bottom: 20px; }
+.insight-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 26px 22px; display: flex; flex-direction: column; gap: 10px;
+}
+.insight-emoji { font-size: 34px; line-height: 1; margin-bottom: 2px; }
+.insight-title { font-size: 16px; font-weight: 700; color: var(--text-dark); }
+.insight-desc { font-size: 13.5px; color: var(--text-mid); line-height: 1.65; }
+.insight-highlight {
+  font-size: 12.5px; color: var(--primary); background: rgba(91,106,208,0.08);
+  border-radius: 6px; padding: 6px 10px; line-height: 1.5;
+}
+.insight-footer {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(91,106,208,0.10), rgba(155,110,224,0.08));
+  border-radius: 12px; padding: 18px 32px;
+  text-align: center; font-size: 17px; font-weight: 700;
+  color: var(--text-dark); line-height: 1.6;
+}
+.insight-footer em { color: var(--primary); font-style: normal; }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- SLIDE 0: COVER -->
+  <div class="slide active" id="slide-0">
+    <div class="cover-inner">
+      <div class="cover-name">李玥</div>
+      <div class="cover-period">2026年 1 — 4 月工作总结</div>
+      <div class="cover-divider"></div>
+      <div class="cover-desc">
+        转岗太平洋工作台 · 明确 AI 建设方向 · 跑通预填通路 · 布局智能助手
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 1: TIMELINE -->
+  <div class="slide" id="slide-1">
+    <div class="slide-inner">
+      <div class="page-label">TIMELINE</div>
+      <div class="page-title">工作时间轴</div>
+      <div class="page-sub">1月 → 5月 &nbsp;·&nbsp; 交接 → 规划 → 验证 → 迭代 → 扩覆盖</div>
+
+      <div class="timeline-track">
+        <div class="timeline-line"></div>
+        <div class="tl-node" onclick="toggleTl(0)">
+          <div class="tl-dot" id="tld0">1月</div>
+          <div class="tl-mlabel">一月</div>
+          <div class="tl-plabel">【交接】</div>
+        </div>
+        <div class="tl-node" onclick="toggleTl(1)">
+          <div class="tl-dot" id="tld1">2月</div>
+          <div class="tl-mlabel">二月</div>
+          <div class="tl-plabel">【规划】</div>
+        </div>
+        <div class="tl-node" onclick="toggleTl(2)">
+          <div class="tl-dot" id="tld2">3月</div>
+          <div class="tl-mlabel">三月</div>
+          <div class="tl-plabel">【验通路】</div>
+        </div>
+        <div class="tl-node" onclick="toggleTl(3)">
+          <div class="tl-dot" id="tld3">4月</div>
+          <div class="tl-mlabel">四月</div>
+          <div class="tl-plabel">【规划·迭代】</div>
+        </div>
+        <div class="tl-node plan" onclick="toggleTl(4)">
+          <div class="tl-dot" id="tld4">5月</div>
+          <div class="tl-mlabel">五月</div>
+          <div class="tl-plabel">【扩覆盖】</div>
+        </div>
+      </div>
+
+      <div class="tl-details">
+        <div class="tl-detail" id="tld-0">
+          <div class="tl-card">
+            <div class="tl-big-month">01</div>
+            <div class="tl-body">
+              <div class="tl-item"><div class="tl-blt"></div><span>资管境内外工作交接，完整接收历史上下文</span></div>
+              <div class="tl-item"><div class="tl-blt"></div><span>工作台拎包调研，快速摸清系统现状与业务诉求</span></div>
+              <div class="tl-outcome">打好基础，快速建立认知</div>
+            </div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tld-1">
+          <div class="tl-card">
+            <div class="tl-big-month">02</div>
+            <div class="tl-body">
+              <div class="tl-item"><div class="tl-blt"></div><span>业务 OP 沟通，对齐各侧诉求</span></div>
+              <div class="tl-item"><div class="tl-blt"></div><span>工作台规划定稿，明确全年 AI 建设路径</span></div>
+              <div class="tl-item"><div class="tl-blt"></div><span>预填评测方案产出，为后续试点做好铺垫</span></div>
+              <div class="tl-outcome">明确方向，定下打法</div>
+            </div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tld-2">
+          <div class="tl-card">
+            <div class="tl-big-month">03</div>
+            <div class="tl-body">
+              <div class="tl-item"><div class="tl-blt"></div><span>Claw × 工作台通路验证，技术路径跑通</span></div>
+              <div class="tl-item"><div class="tl-blt"></div><span>骑手业务首批试点，采纳率验证</span></div>
+              <div class="tl-item"><div class="tl-blt"></div><span>星巴克业务试点，覆盖第二个业务场景</span></div>
+              <div class="tl-outcome">跑通路径，验证可行</div>
+            </div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tld-3">
+          <div class="tl-card">
+            <div class="tl-big-month">04</div>
+            <div class="tl-body">
+              <div class="tl-item"><div class="tl-blt"></div><span>客服助手规划定稿，明确应用形态与演进节奏</span></div>
+              <div class="tl-item"><div class="tl-blt"></div><span>服务收尾能力持续迭代，打磨链路细节</span></div>
+              <div class="tl-outcome">深化布局，持续打磨</div>
+            </div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tld-4">
+          <div class="tl-card plan">
+            <div class="tl-big-month">05</div>
+            <div class="tl-body">
+              <div class="tl-item"><div class="tl-blt"></div><span>服务收尾应用扩覆盖，规模化复制成功经验</span></div>
+              <div class="tl-item"><div class="tl-blt"></div><span>主动推荐式客服助手试点，医药客服场景</span></div>
+              <div class="tl-outcome">规模复制，扩大战果 <span class="plan-badge">规划中</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: DIRECTION -->
+  <div class="slide" id="slide-2">
+    <div class="slide-inner">
+      <div class="page-label">DIRECTION</div>
+      <div class="page-title">确定工作台 AI 建设方向</div>
+      <div class="page-sub">基于拎包调研 + 业务 OP 沟通，产出工作台全年规划</div>
+
+      <div class="strategy-banner">
+        <div class="strategy-quote">「AI 替代<em>低价值操作</em>，释放坐席聚焦<em>沟通 · 判断 · 共情</em>」</div>
+        <div class="strategy-tags">
+          <span class="s-tag">人效提升</span>
+          <span class="s-tag">体验提升</span>
+          <span class="s-tag">工作台规划 ✓</span>
+        </div>
+      </div>
+
+      <div class="dir-cols">
+        <div class="dir-card">
+          <div class="dir-card-label">OUTPUT</div>
+          <div class="dir-card-title">工作台 AI 规划</div>
+          <div class="dir-row">
+            <div class="dir-icon" style="background:rgba(91,106,208,0.10)">📋</div>
+            <div class="dir-text"><strong>拎包调研 → 问题清单</strong>梳理现有工作台痛点，摸清坐席真实操作负担</div>
+          </div>
+          <div class="dir-row">
+            <div class="dir-icon" style="background:rgba(91,106,208,0.10)">🗺️</div>
+            <div class="dir-text"><strong>业务 OP 沟通 → 优先级矩阵</strong>与 3+ 业务方对齐，确定高价值切入点</div>
+          </div>
+          <div class="dir-row">
+            <div class="dir-icon" style="background:rgba(91,106,208,0.10)">✅</div>
+            <div class="dir-text"><strong>规划定稿</strong>明确短中期路径，2月完成内部确认</div>
+          </div>
+        </div>
+        <div class="dir-card">
+          <div class="dir-card-label">CORE LOGIC</div>
+          <div class="dir-card-title">人 + AI 分工逻辑</div>
+          <div class="dir-row">
+            <div class="dir-icon human">🧑</div>
+            <div class="dir-text"><strong>坐席高价值工作</strong>沟通协商 · 决策判断 · 情绪安抚 · 复杂问题处理</div>
+          </div>
+          <div class="dir-row">
+            <div class="dir-icon ai">🤖</div>
+            <div class="dir-text"><strong>AI 接管低价值操作</strong>厘清问题 · 核实信息 · 工单预填 · 操作执行</div>
+          </div>
+          <div class="dir-row">
+            <div class="dir-icon" style="background:rgba(245,166,35,0.12)">⚡</div>
+            <div class="dir-text"><strong>核心价值</strong>减少重复操作，让坐席把精力放在真正需要人的地方</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: EXECUTION -->
+  <div class="slide" id="slide-3">
+    <div class="slide-inner">
+      <div class="page-label">EXECUTION</div>
+      <div class="page-title">单场景赋能：工单预填</div>
+      <div class="page-sub">通用 Skill 方案 · 覆盖字段翻倍 · 配置成本大幅下降</div>
+
+      <div class="metrics-row">
+        <div class="metric-card green">
+          <div class="metric-num"><span id="cu-adopt">0</span><span class="metric-unit">%+</span></div>
+          <div class="metric-label">工单预填采纳率</div>
+          <div class="metric-sub">与老模型持平，覆盖字段翻倍</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-num"><span id="cu-cost">0</span><span class="metric-unit">%</span></div>
+          <div class="metric-label">配置成本下降</div>
+          <div class="metric-sub">无需 by 业务配置 Agent / 数据源 / 出入参</div>
+        </div>
+        <div class="metric-card orange">
+          <div class="metric-num"><span id="cu-fields">0</span><span class="metric-unit">个</span></div>
+          <div class="metric-label">预填字段覆盖</div>
+          <div class="metric-sub">老模型 20个 → 新通用 Skill 43个</div>
+        </div>
+      </div>
+
+      <div class="status-rows">
+        <div class="status-row">
+          <span class="status-badge done">✓ 已完成</span>
+          <div class="status-tags">
+            <span class="status-tag">Claw × 工作台通路验证</span>
+            <span class="status-tag">骑手业务试点</span>
+            <span class="status-tag">星巴克试点</span>
+          </div>
+        </div>
+        <div class="status-row">
+          <span class="status-badge next">→ 下一步</span>
+          <div class="status-tags">
+            <span class="status-tag">4月 链路迭代（速度 / 易用性）</span>
+            <span class="status-tag">5月 到家扩功能覆盖</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: ASSISTANT -->
+  <div class="slide" id="slide-4">
+    <div class="slide-inner">
+      <div class="page-label">ASSISTANT</div>
+      <div class="page-title">全链路智能助手</div>
+      <div class="page-sub">明确助手在工作台的应用形态与演进节奏</div>
+
+      <div class="asst-cols">
+        <div class="asst-card done">
+          <span class="asst-badge">✓ 已完成</span>
+          <div class="asst-title">客服助手规划定稿</div>
+          <div class="asst-item"><div class="asst-dot"></div><span>明确应用形态：灵动面板 + 侧边助手双形态并行</span></div>
+          <div class="asst-item"><div class="asst-dot"></div><span>演进节奏：被动响应 → 主动推荐 → 全链路自动化</span></div>
+          <div class="asst-item"><div class="asst-dot"></div><span>与业务对齐优先级，确定首批试点场景</span></div>
+        </div>
+        <div class="asst-card pilot">
+          <span class="asst-badge">→ 5月试点</span>
+          <div class="asst-title">主动推荐式客服助手</div>
+          <div class="asst-item"><div class="asst-dot"></div><span>医药客服场景，灵动面板形态，首次试点</span></div>
+          <div class="asst-item"><div class="asst-dot"></div><span>助手主动感知对话内容，推荐操作与话术</span></div>
+          <div class="asst-item"><div class="asst-dot"></div><span>收集真实数据，验证主动推荐效果与接受度</span></div>
+        </div>
+      </div>
+
+      <div class="asst-footer">
+        从「被动响应」到「主动推荐」，是助手能力的<em style="color:var(--primary);font-style:normal;">质变</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: ITERATION -->
+  <div class="slide" id="slide-5">
+    <div class="slide-inner">
+      <div class="page-label">ITERATION</div>
+      <div class="page-title">日常迭代</div>
+
+      <div class="iter-header">
+        <div class="iter-num">11</div>
+        <div class="iter-unit-block">
+          <div class="iter-unit">个需求交付</div>
+          <div class="iter-sub-tags">
+            <span class="iter-sub-tag">2月起交付</span>
+            <span class="iter-sub-tag">持续推进中</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="iter-cols">
+        <div class="iter-col">
+          <div class="iter-col-title">
+            <div class="iter-col-icon">🛡️</div>
+            控风险
+          </div>
+          <div class="tag-cloud">
+            <span class="iter-tag">容器组件稳定性</span>
+            <span class="iter-tag">线上问题修复</span>
+          </div>
+        </div>
+        <div class="iter-col">
+          <div class="iter-col-title">
+            <div class="iter-col-icon">✨</div>
+            有体验
+          </div>
+          <div class="tag-cloud">
+            <span class="iter-tag">工单域基建</span>
+            <span class="iter-tag">交互优化</span>
+          </div>
+        </div>
+        <div class="iter-col">
+          <div class="iter-col-title">
+            <div class="iter-col-icon">🏗️</div>
+            夯基建
+          </div>
+          <div class="tag-cloud">
+            <span class="iter-tag">战队高优需求</span>
+            <span class="iter-tag">基础能力建设</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: INSIGHT -->
+  <div class="slide" id="slide-6">
+    <div class="slide-inner">
+      <div class="page-label">INSIGHT</div>
+      <div class="page-title">认知迭代</div>
+      <div class="page-sub">「人无法被替代的三件事」</div>
+
+      <div class="insight-cols">
+        <div class="insight-card">
+          <div class="insight-emoji">🎯</div>
+          <div class="insight-title">决策判断</div>
+          <div class="insight-desc">方向、节奏、取舍——这些是人的核心价值，AI 无法替代对全局的把握和模糊情境下的选择。</div>
+          <div class="insight-highlight">方向 · 节奏 · 取舍</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-emoji">📐</div>
+          <div class="insight-title">制定标准</div>
+          <div class="insight-desc">Agent 设计原则、模型评判准则——标准本身需要人来定义，AI 只是标准的执行者。</div>
+          <div class="insight-highlight">Agent 设计 · 模型评判准则</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-emoji">❤️</div>
+          <div class="insight-title">人心洞察</div>
+          <div class="insight-desc">坐席不信任 AI，根因不是能力问题，而是「出了问题自己担责」——这是人与人之间才能解决的信任建立。</div>
+          <div class="insight-highlight">「出了问题自己担责」→ 信任是根本</div>
+        </div>
+      </div>
+
+      <div class="insight-footer">
+        「AI 是我手里的工具，<em>而非替代我的威胁</em>」
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- Bottom Nav -->
+<div id="nav">
+  <button class="nav-arrow" id="btnPrev" onclick="goTo(currentSlide - 1)" title="上一页">&#8592;</button>
+  <div class="nav-dots" id="navDots"></div>
+  <button class="nav-arrow" id="btnNext" onclick="goTo(currentSlide + 1)" title="下一页">&#8594;</button>
+</div>
+
+<script>
+var TOTAL = 7;
+var currentSlide = 0;
+var tlOpen = -1;
+var cuRunning = false;
+
+// Build nav dots
+var dotsEl = document.getElementById('navDots');
+for (var d = 0; d < TOTAL; d++) {
+  var dot = document.createElement('div');
+  dot.className = 'dot' + (d === 0 ? ' active' : '');
+  dot.setAttribute('data-idx', d);
+  dot.onclick = (function(idx) { return function() { goTo(idx); }; })(d);
+  dotsEl.appendChild(dot);
+}
+
+function goTo(idx) {
+  if (idx < 0 || idx >= TOTAL || idx === currentSlide) return;
+
+  var prev = currentSlide;
+  currentSlide = idx;
+
+  // Manage slide classes
+  var slides = document.querySelectorAll('.slide');
+  slides[prev].classList.remove('active');
+  slides[prev].classList.add('exit-left');
+  slides[currentSlide].classList.remove('exit-left');
+  slides[currentSlide].classList.add('active');
+
+  setTimeout(function() {
+    slides[prev].classList.remove('exit-left');
+  }, 600);
+
+  // Update dots
+  var dots = document.querySelectorAll('.dot');
+  for (var i = 0; i < dots.length; i++) {
+    dots[i].classList.toggle('active', i === currentSlide);
+  }
+
+  // CountUp: reset when leaving slide 3, trigger when entering slide 3
+  if (prev === 3) {
+    document.getElementById('cu-adopt').textContent = '0';
+    document.getElementById('cu-cost').textContent = '0';
+    document.getElementById('cu-fields').textContent = '0';
+    cuRunning = false;
+  }
+  if (currentSlide === 3) {
+    runCountUp();
+  }
+}
+
+function runCountUp() {
+  if (cuRunning) return;
+  cuRunning = true;
+  countUp('cu-adopt', 95, 1400);
+  countUp('cu-cost', 70, 1400, '-');
+  countUp('cu-fields', 43, 1200);
+}
+
+function countUp(id, target, duration, prefix) {
+  var el = document.getElementById(id);
+  var start = 0;
+  var pref = prefix || '';
+  var startTime = null;
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    var prog = Math.min((ts - startTime) / duration, 1);
+    var ease = 1 - Math.pow(1 - prog, 3);
+    var val = Math.floor(ease * target);
+    el.textContent = pref + val;
+    if (prog < 1) {
+      requestAnimationFrame(step);
+    } else {
+      el.textContent = pref + target;
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+function toggleTl(idx) {
+  var details = document.querySelectorAll('.tl-detail');
+  var dots = [
+    document.getElementById('tld0'),
+    document.getElementById('tld1'),
+    document.getElementById('tld2'),
+    document.getElementById('tld3'),
+    document.getElementById('tld4')
+  ];
+
+  if (tlOpen === idx) {
+    // Close
+    details[idx].classList.remove('open');
+    dots[idx].classList.remove('active');
+    tlOpen = -1;
+  } else {
+    // Close prev
+    if (tlOpen !== -1) {
+      details[tlOpen].classList.remove('open');
+      dots[tlOpen].classList.remove('active');
+    }
+    // Open new
+    details[idx].classList.add('open');
+    dots[idx].classList.add('active');
+    tlOpen = idx;
+  }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    goTo(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    goTo(currentSlide - 1);
+  }
+});
+
+// Touch swipe
+var touchStartX = 0;
+document.addEventListener('touchstart', function(e) {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+document.addEventListener('touchend', function(e) {
+  var dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) {
+    goTo(dx < 0 ? currentSlide + 1 : currentSlide - 1);
+  }
+}, { passive: true });
+</script>
+</body>
+</html>
